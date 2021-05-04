@@ -25,10 +25,9 @@ function out = PSO(problem, params)
 	threshold = params.threshold; % zadowalajacy pulap wartosci rozwiazania
     iterationsToBreak = params.iterationsToBreak; % ilosc iteracji pod rzad przed warunkowym zakonczeniem algorytmu
 
-    out.hasReachedThreshold = false;
     out.iterations = MaxIt;
     breakCounter = 0;
-	
+    savedValue = inf;
 
     % flaga odpowiadająca za wyświetlanie informacji o iteracjach
     ShowIterInfo = params.ShowIterInfo;    
@@ -127,16 +126,17 @@ function out = PSO(problem, params)
             disp(['Iteration ' num2str(it) ': Best Cost = ' num2str(BestCosts(it))]);
         end
 		
-		% warunkowe przerwanie algorytmu
-        if BestCosts(it) <= threshold
+        % warunkowe przerwanie algorytmu
+        if (savedValue-threshold <= BestCosts(it)) && (BestCosts(it) <= savedValue+threshold) 
             breakCounter = breakCounter + 1;
             if breakCounter >= iterationsToBreak
-                out.hasReachedThreshold = true;
                 out.iterations = it;
+                BestCosts(it+1:MaxIt) = [];
                 break;
             end
         else
-            breakCounter=0;
+            breakCounter = 0;
+            savedValue = BestCosts(it);
         end
 
         % Wytłumienie współczynnika bezwładności

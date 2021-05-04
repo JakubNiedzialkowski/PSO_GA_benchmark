@@ -16,9 +16,9 @@ function out = genetic(problem, params)
     iterationsToBreak = params.iterationsToBreak; % ilosc iteracji pod rzad przed warunkowym zakonczeniem algorytmu
     %--------------------------------------------------------------------------
 
-    out.hasReachedThreshold = false;
     out.iterations = totalGenerations;
     breakCounter = 0;
+    savedValue = inf;
 
     % inicjalizacja tablicy przechowującej najlepsze wartośći z poszczególnych iteracji
     BestCosts = zeros(totalGenerations, 1);
@@ -34,15 +34,16 @@ function out = genetic(problem, params)
         [Pop Sel]=selection(Pop, Eva, populationSize);
         BestCosts(i)=-Sel(1); % Zapisanie najlepszej globalnej wartości
 
-        if BestCosts(i) <= threshold
+        if (savedValue-threshold <= BestCosts(i)) && (BestCosts(i) <= savedValue+threshold) 
             breakCounter = breakCounter + 1;
             if breakCounter >= iterationsToBreak
-                out.hasReachedThreshold = true;
                 out.iterations = i;
+                BestCosts(i+1:totalGenerations) = [];
                 break;
             end
         else
-            breakCounter=0;
+            breakCounter = 0;
+            savedValue = BestCosts(i);
         end
 
     end    

@@ -19,7 +19,7 @@ params.c1 = 2;              % wspolczynnik przyspieszenia lokalnego czasteczki(p
 params.c2 = 2;              % wspolczynnik przyspieszenia globalnego czasteczki(spoleczny) (2 dla standardowego pso)
 params.precision = 5; % Precyzja wartosci
 params.threshold = 5*10^(-params.precision); % zadowalajacy pulap wartosci rozwiazania
-params.iterationsToBreak = 10; % ilosc iteracji pod rzad przed warunkowym zakonczeniem algorytmu
+params.iterationsToBreak = 50; % ilosc iteracji pod rzad przed warunkowym zakonczeniem algorytmu
 params.ShowIterInfo = false; % warunek do wyswietlania informacji o iteracjach
 
 
@@ -33,7 +33,7 @@ BestCosts = zeros(1,testSize);
 discrepencies = zeros(1,testSize);
 theoreticalBestPositions = 0.*ones(1,problem.nVar);
 theoreticalBestCost = problem.CostFunction(theoreticalBestPositions);
-params.threshold = theoreticalBestCost + 5*10^(-params.precision);
+threshold = theoreticalBestCost + 5*10^(-params.precision);
 
 %% Wywolanie glownego algorytmu
 for i=1:testSize
@@ -48,7 +48,7 @@ for i=1:testSize
     discrepencies(i) = minValue - theoreticalBestCost;
     iterations(i) = out.iterations;
 
-    if out.hasReachedThreshold
+    if minValue <= threshold
         resultsWithinThreshold = resultsWithinThreshold + 1;
     end     
 

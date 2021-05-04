@@ -24,9 +24,9 @@ function out = APSO(problem, params)
     threshold = params.threshold; % zadowalajacy pulap wartosci rozwiazania
     iterationsToBreak = params.iterationsToBreak; % ilosc iteracji pod rzad przed warunkowym zakonczeniem algorytmu
 
-    out.hasReachedThreshold = false;
     out.iterations = MaxIt;
     breakCounter = 0;
+    savedValue = inf;
 
     % flaga odpowiadająca za wyświetlanie informacji o iteracjach
     ShowIterInfo = params.ShowIterInfo;    
@@ -104,15 +104,16 @@ function out = APSO(problem, params)
         BestCosts(it) = GlobalBest.Cost;
 
         % warunkowe przerwanie algorytmu
-        if BestCosts(it) <= threshold
+        if (savedValue-threshold <= BestCosts(it)) && (BestCosts(it) <= savedValue+threshold) 
             breakCounter = breakCounter + 1;
             if breakCounter >= iterationsToBreak
-                out.hasReachedThreshold = true;
                 out.iterations = it;
+                BestCosts(it+1:MaxIt) = [];
                 break;
             end
         else
-            breakCounter=0;
+            breakCounter = 0;
+            savedValue = BestCosts(it);
         end
 
         % Wyświetlenie informacji o iteracji
