@@ -17,6 +17,7 @@ function out = genetic(problem, params)
     %--------------------------------------------------------------------------
 
     out.iterations = totalGenerations;
+    out.hasReachedThreshold = false;
     breakCounter = 0;
     savedValue = inf;
 
@@ -38,6 +39,7 @@ function out = genetic(problem, params)
             breakCounter = breakCounter + 1;
             if breakCounter >= iterationsToBreak
                 out.iterations = i;
+                out.hasReachedThreshold = true;
                 BestCosts(i+1:totalGenerations) = [];
                 break;
             end
