@@ -21,15 +21,16 @@ while selectedIndex <= populationSize-e
     randPair = randperm(x-selectedIndex, 2); % wybór pary do turnieju
     if fitnessValue(:,randPair(1)) >= fitnessValue(:,randPair(2))
         Y1(selectedIndex+1,:)=Population(randPair(1),:);
-        Population(randPair(1),:) = [];
         Fn(selectedIndex+1)=fitnessValue(:,randPair(1));
-        fitnessValue(:,randPair(1)) = [];
     else
         Y1(selectedIndex+1,:)=Population(randPair(2),:);
-        Population(randPair(2),:) = [];
         Fn(selectedIndex+1)=fitnessValue(:,randPair(2));
-        fitnessValue(:,randPair(2)) = [];
     end
+
+    Population(randPair(1),:) = [];
+    fitnessValue(:,randPair(1)) = [];
+    Population(randPair(2),:) = [];
+    fitnessValue(:,randPair(2)) = [];
 end
 
 YY1 = Y1;
